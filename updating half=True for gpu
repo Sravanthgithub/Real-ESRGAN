@@ -191,7 +191,7 @@ def enhance(image):
         tile=0,
         tile_pad=10,
         pre_pad=0,
-        half=False,  #set True for gpu and False for cpu
+        half=True,  #set True for gpu and False for cpu
         gpu_id=None)
 
     output, _ = upsampler.enhance(image, outscale=2)
