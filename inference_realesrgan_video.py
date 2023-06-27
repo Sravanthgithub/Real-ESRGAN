@@ -269,7 +269,7 @@ def inference_video(args, video_save_path, device=None, total_workers=1, worker_
         else:
             writer.write_frame(output)
 
-        #torch.cuda.synchronize(device)
+        torch.cuda.synchronize(device)
         pbar.update(1)
 
     reader.close()
@@ -288,7 +288,7 @@ def run(args):
 
     num_gpus = torch.cuda.device_count()
     num_process = num_gpus * args.num_process_per_gpu
-    if num_process == 0:
+    if num_process == 1:
         inference_video(args, video_save_path)
         return
 
