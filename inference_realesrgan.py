@@ -162,5 +162,42 @@ def main():
             cv2.imwrite(save_path, output)
 
 
+def enhance(image):
+
+    """
+    Inference demo for Real-ESRGAN.
+    Returns the enhanced image
+    """
+
+    model = RRDBNet(num_in_ch=3, num_out_ch=3, num_feat=64, num_block=23, num_grow_ch=32, scale=2)
+    netscale = 2
+    file_url = ['https://github.com/xinntao/Real-ESRGAN/releases/download/v0.2.1/RealESRGAN_x2plus.pth']
+
+    dni_weight = None
+
+    model_path = os.path.join('weights', 'RealESRGAN_x2plus.pth')
+    if not os.path.isfile(model_path):
+        ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
+        for url in file_url:
+            # model_path will be updated
+            model_path = load_file_from_url(
+                url=url, model_dir=os.path.join(ROOT_DIR, 'weights'), progress=True, file_name=None)
+
+    upsampler = RealESRGANer(
+        scale=netscale,
+        model_path=model_path,
+        dni_weight=dni_weight,
+        model=model,
+        tile=0,
+        tile_pad=10,
+        pre_pad=0,
+        half=False, #set True for gpu and False for cpu
+        gpu_id=None)
+
+    output, _ = upsampler.enhance(image, outscale=2)
+
+    return output
+
+
 if __name__ == '__main__':
     main()
